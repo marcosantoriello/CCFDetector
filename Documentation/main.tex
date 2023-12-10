@@ -1,0 +1,105 @@
+\documentclass[12pt, a4paper, oneside]{book}
+\usepackage{fontspec}
+%\setmainfont{Arial}[ItalicFont={Arial Italic}]
+%\setmainfont{Gill Sans MT}[ItalicFont={Gill Sans MT Italic}]
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1.5cm, bindingoffset=1cm]{geometry}
+\linespread{1.5}
+\usepackage{float}
+\usepackage{csquotes}
+\usepackage{subfig}
+\usepackage{graphicx}
+\usepackage{wrapfig}
+\usepackage{xcolor}
+\usepackage{indentfirst}
+\setlength{\parindent}{0cm}
+\usepackage[italian]{babel}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{wrapfig}
+\usepackage{url}
+\lstset{showstringspaces=false}
+
+\newcounter{xmpl} %CONTATORE ESEMPIO
+\newenvironment{esempio} %ENVIRONMENT ESEMPIO
+ {\noindent
+  \refstepcounter{xmpl}
+  \textbf{Esempio \thexmpl\\}
+ }{\par\noindent%
+   \ignorespacesafterend}
+
+\newcommand*\y[1]{\colorbox{yellow}{#1}}
+\newcommand*\implica{ \underbrace{ \Longrightarrow }_{implica}}
+\newcommand*\fand{ \underbrace{ \land }_{e}}
+\newcommand*\for{ \underbrace{ \lor }_{oppure}}
+\newcommand*\quindi{ \underbrace{ \Longleftrightarrow }_{quindi}}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\renewcommand{\chaptermark}[1]{%
+\markboth{\chaptername
+\ \thechapter.\ #1}{}}
+\fancyhf{}
+\fancyhead[L]{\textsl{\leftmark}}
+\fancyhead[R]{\textsl{FIA - A.A. 23/24 }}
+\fancyfoot[C]{\thepage}
+
+
+\title{CCFDetector}
+\author{Marco Santoriello}
+\date{Dicembre 2023}
+
+\begin{document}
+\begin{titlepage}
+    \begin{center}
+        \LARGE{\uppercase{Università degli Studi di Salerno}}\\
+        \vspace{5mm}
+        %Dipartimento
+    	\uppercase{\normalsize Dipartimento di Informatica}\\
+    \end{center}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.35\textwidth]{img/logo_unisa.png}
+    \end{figure}
+    
+    \begin{center}
+        %Corso di Laurea
+    	\normalsize{ Corso di Laurea in informatica }\\
+    	\vspace{15mm}
+    	%Titolo
+        {\LARGE{\bf CCFDetector: Using ML against Credit Card Frauds }}\\
+        {\large{ Progetto realizzato per l'esame di Fondamenti di Intelligenza Artificiale}}\\
+    	\vspace{10mm}
+    \end{center}
+    \begin{minipage}[t]{0.4\textwidth}\raggedright
+        %Candidato
+    	{\large{Scritto da: \\ \bf Marco Santoriello\\ Mat. 0512114100}}
+    \end{minipage}
+    
+    \vspace{90mm}
+    %Anno Accademico
+    \centering{\large \uppercase{ Anno Accademico 2023/2024 }}
+
+\end{titlepage}
+
+\setcounter{tocdepth}{3} %IMPOSTO LIVELLO PROFONDITA' INDICE
+
+\tableofcontents
+
+\chapter*{Problem Statement}
+\addcontentsline{toc}{chapter}{\protect\numberline{}Problem Statement}
+    \section*{Introduzione}
+    \addcontentsline{toc}{section}{\protect\numberline{}Introduzione}
+        Negli ultimi anni, sempre più piede hanno preso i pagamenti elettronici, al punto che, anche in Italia, per legge, ogni commerciante deve essere munito di un dispositivo che permetta al cliente di pagare utilizzando la propria carta di credito, rischiando, in caso di mancato adempimento a questa legge, ingenti sanzioni pecuniarie.\\
+        
+        Come è facile immaginare, questo cambiamento nel modo in cui il denaro viene messo in circolazione ha interessato, non poco, criminali e truffatori (i cosiddetti \textit{scammers}), i quali hanno trovato non pochi modi di impossessarsi illecitamente, in maniera fisica o meno, delle carte di credito altrui.\\
+    
+        Basti pensare che negli Stati Uniti, secondo la \textit{Federal Trade Commission}, al tipologia di furti di identità più diffusi è proprio correlata alle frodi relative alle carte di credito.\\
+        Queste frodi possono avvenire in svariati modiò per citarne alcuni: si parte dal furto vero e proprio della carta di credito, fino ad arrivare all'appropriazione dei soli dati della carta che abilitano al pagamento, passando per la clonazione delle carte e per l'utilizzo di dispositivi \textit{contactless} in posti affollati in prossimità dei portafogli delle ignare vittime.\\
+    
+        Questo progetto nasce con lo scopo di addestrare un modello di Machine Learning che permetta una facile ed affidabile individuazione delle transazioni fraudolente.
+
+                
+\end{document}
