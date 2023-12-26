@@ -16,6 +16,7 @@
 \usepackage[italian]{babel}
 \usepackage{amsmath,amssymb}
 \usepackage{hyperref}
+\usepackage{amsmath}
 % Imposto colore hyperlinks
 \hypersetup{
     colorlinks=true,
@@ -74,12 +75,9 @@
 
 \section{Introduzione}
     Negli ultimi anni, sempre più piede hanno preso i pagamenti elettronici, al punto che, anche in Italia, per legge, ogni commerciante deve essere munito di un dispositivo che permetta al cliente di pagare utilizzando la propria carta di credito, rischiando, in caso di mancato adempimento a questa legge, ingenti sanzioni pecuniarie.\\
-
-    Come è facile immaginare, questo cambiamento nel modo in cui il denaro viene messo in circolazione ha interessato notevolmente criminali e truffatori (i cosiddetti \textit{scammers}), i quali hanno trovato non pochi modi di impossessarsi illecitamente, in maniera fisica o meno, delle carte di credito altrui.\\
-
+    Come è facile immaginare, questo cambiamento nel modo in cui il denaro viene messo in circolazione ha interessato notevolmente criminali e truffatori (i cosiddetti \textit{scammers}), i quali hanno trovato non pochi modi di impossessarsi illecitamente, in maniera fisica o meno, delle carte di credito altrui.
     Basti pensare che negli Stati Uniti, secondo la \textit{Federal Trade Commission}, la tipologia di furti di identità più diffusi è proprio correlata alle frodi relative alle carte di credito.\\
     Queste frodi possono avvenire in svariati modi: si parte dal furto vero e proprio della carta di credito, fino ad arrivare, tramite diversi metodi, all'appropriazione dei soli dati della carta che abilitano al pagamento, passando per la clonazione delle carte e per l'utilizzo di dispositivi \textit{contactless} in posti affollati in prossimità dei portafogli delle ignare vittime.\\
-
     Questo progetto nasce con lo scopo di addestrare un modello di Machine Learning che permetta una facile ed affidabile individuazione delle transazioni fraudolente.
 
     \subsection{Specifica PEAS}
@@ -100,18 +98,52 @@
 \section{Data Understanding}
     \subsection{Data Collection}
         Definito il Problem Statement, passo all'individuazione del dataset adatto per l'addestramento e la validazione del modello.\\
-        Trattandosi di dati particolarmente sensibili, il numero di dataset presenti online non è particolarmente alto. Tuttavia, un \href{https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud}{dataset} in particolare, sembra essere particolarmente rilevante per gli scopi di questo progetto.
+        Trattandosi di dati particolarmente sensibili, il numero di dataset presenti online non è molto alto. Tuttavia, un \href{https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud}{dataset} in particolare, sembra essere particolarmente rilevante per gli scopi di questo progetto.
 
     \subsection{Data Description}
-        Procedo con lo studio dei dati selezionati per guadagnarne una maggiore comprensione. Il dataset individuato, realizzato e rilasciato dai Cardholders europei, contiene l'insieme delle transazioni effettuate da carte di credito in due giorni del settembre 2013.\\
+        Procedo con lo studio dei dati selezionati per averne una maggiore comprensione. Il dataset individuato, realizzato e rilasciato dai Cardholders europei, contiene l'insieme delle transazioni effettuate da carte di credito in due giorni del settembre 2013.\\
         I dati presenti sono tutti numerici e sono il risultato di una trasformazione PCA. La Principal Component Analysis è una tecnica di riduzione della dimensionalità di un dataset, le cui variabili vengono trasformate in un nuovo set di variabili, che sono combinazioni lineari delle variabili originali (il risultato finale è, dunque, un nuovo dataset).\\
         Chiaramente, per motivi di riservatezza, non sono state fornite le caratteristiche originali, di cui non sappiamo nulla. Le componenti principali ottenute con PCA sono le features V1, V2, ..., V28. Le uniche caratteristiche che non sono state sottoposte alla trasformazione PCA sono \textit{Time} e \textit{Amount}: \textit{Time} rappresenta il tempo, in secondi, trascorso tra ogni transazione e la prima transazione del dataset, mentre \textit{Amount} rappresenta l'ammontare, in USD, della transazione. La variabile \textit{Class}, infine, è la nostra variabile dipendente che assume valore 0, se la transazione è autorizzata (dunque lecita), oppure 1, se la transazione risulta essere fraudolenta.\\
 
     \subsection{Data Quality}
-        La prima cosa che controllo è se il dataset è bilanciato o meno. Su un totale di 284807 transazioni, soltanto 492 di esse risultano essere fraudolente: si tratta dello 0.172\% del totale. Pertanto, il dataset risulta essere \textit{altamente sbilanciato}.
+        La prima cosa che controllo è se il dataset è bilanciato o meno. Su un totale di 284807 transazioni, soltanto 492 di esse risultano essere fraudolente: si tratta dello 0.172\% del totale. Pertanto, il dataset risulta essere \textit{altamente sbilanciato}, come osservabile nel seguente grafico:
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=.6\textwidth]{img/classDistribution.png}
+            \caption[short]{}
+        \end{figure}
 
-        Non ci sono valori \textit{null} all'interno del dataset e, l'ammontare delle transazioni fraudolente risulta essere, in media, di 88,2 USD. Dunque, è in media più bassa delle transazioni lecite, che ammontano, in media a 122,2 USD. Altro aspetto da tenere in considerazione è che le features da V1 a V28 sono già state scalate in quanto sottoposte a trasformazione PCA.\\
-        L'utilizzo di un dataset così sbilanciato, porterebbe alla costruzione di un modello altamente impreciso e che, probabilmente, si \textit{adatterà troppo (overfitting)} al problema, in quanto andrebbe ad assumere la maggior parte delle transazioni come non fraudolente, siccome queste costituiscono la stragrande maggioranza dei dati.
+        Non ci sono valori \textit{null} all'interno del dataset e l'ammontare delle transazioni fraudolente risulta essere, in media, di 88,2 USD. Media che risulta essere più bassa di quella delle transazioni lecite che, invece, ammonta a 122,2 USD. Altro aspetto da tenere in considerazione è che le features da V1 a V28 sono già state scalate in quanto sottoposte a trasformazione PCA.\\
+        L'utilizzo di un dataset così sbilanciato, porterebbe alla costruzione di un modello altamente impreciso e che, probabilmente, si \textit{adatterà troppo (overfitting)} al problema, in quanto andrebbe ad assumere la maggior parte delle transazioni come non fraudolente, siccome queste costituiscono la stragrande maggioranza dei dati.\\
+        Un'altra delle conseguenze relative all'utilizzo di un dataset sbilanciato, è la mancata comprensione della correlazione tra le varie caratteristiche. Infatti, andando a generare una matrice di correlazione, mostrata nella seguente figura, usando i dati attuali, non osservo particolari caratteristche correlate tra loro. Un'altra matrice di correlazione verrà generata una volta aver terminato il bilanciamento dei dati e verrà confrontata con la seguente.
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=.6\textwidth]{img/correlationMatrixUnbalanced.png}
+            \caption[short]{}
+        \end{figure}
+
+\section{Data Preparation}
+    \subsection{Data Cleaning}
+        La fase di \textit{Data Cleaning}, è la fase in cui si vanno a gestire dati mancanti o rumorosi.
+        Il dataset considerato non presenta alcun valore \textit{null} o rumoroso, per cui si può passare alla fase di \textit{Feature Scaling}.
+
+    \subsection{Feature Scaling}
+        Nella fase di \textit{Feature Scaling} si utilizzando apposite tecniche per scalare o normalizzare dati con valori particolarmente diversi tra loro. Infatti, addestrare un modello con un dataset che presenta valori per una determinata caratteristica particolarmente distanti dagli altri, potrebbe ingannare il modello il quale andrebbe a sovrastimare o sottostimare l'importanza di una caratteristica. Nel nostro caso, \textit{Amount} e \textit{Time} sono le uniche due caratteristiche che presentano valori diversi dagli altri poiché questi ultimi, come già illustrato, sono già stati scalati.\\
+        Per la selezione dello \textit{scaler} più appropriato per i dati in questione, procedo con l'osservazione della loro distribuzione.
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=.9\textwidth]{img/valuesDistribution.png}
+            \caption[short]{}
+        \end{figure}
+        La distribuzione dei valori di \textit{Time} mostra una certa periodicità o struttura ciclica, suggerendo che alcune ore del giorno potrebbero essere più propense a transazioni rispetto ad altre.\\
+        La distribuzione dei valori di \textit{Amount}, invece, risulta essere \textit{fortemente asimmetrica} a destra: la maggior parte delle transazioni risultano essere caratterizzate da importi relativamente bassi, mentre poche sono quelle con importi più alti (queste ultime transazioni rappresentano degli \textit{outliers}, cioè dei valori anomali rispetto al resto della distribuzione).\\
+        La tecnica di scaling che risulta essere più appropriata per gestire una distribuzione fortemente asimmetrica è quella del \textit{Robust Scaling}.\\
+        La tecnica di Robust Scaling è quella più resistente agli outliers poiché utilizza \textit{mediana} e \textit{IQR} (Range Interquartile). Infatti, una tecnica che utilizza la media (e.g. Standard Scaling) risulta essere molto sensibile agli outliers, in quanto essi ne causano una notevole variazione. Invece, la mediana non dipende da ogni singolo valore, dunque è meno soggetta ad alterazioni in presenza di outliers.\\
+        Di seguito la formula di Roubust Scaling:\\
+        \begin{center}
+            $\text{Robust Scaling}(x) = \frac{x - \text{Mediana}(x)}{\text{IQR}(x)}$
+        \end{center}
+
 
 
 
