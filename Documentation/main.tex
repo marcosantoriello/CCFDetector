@@ -1,4 +1,4 @@
-\documentclass[12pt, a4paper, oneside]{book}
+\documentclass[]{article}
 \usepackage{fontspec}
 %\setmainfont{Arial}[ItalicFont={Arial Italic}]
 %\setmainfont{Gill Sans MT}[ItalicFont={Gill Sans MT Italic}]
@@ -16,40 +16,22 @@
 \usepackage[italian]{babel}
 \usepackage{amsmath,amssymb}
 \usepackage{hyperref}
+% Imposto colore hyperlinks
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    urlcolor=blue,
+    }
 \usepackage{color}
 \usepackage{listings}
 \usepackage{wrapfig}
 \usepackage{url}
+
 \lstset{showstringspaces=false}
-
-\newcounter{xmpl} %CONTATORE ESEMPIO
-\newenvironment{esempio} %ENVIRONMENT ESEMPIO
- {\noindent
-  \refstepcounter{xmpl}
-  \textbf{Esempio \thexmpl\\}
- }{\par\noindent%
-   \ignorespacesafterend}
-
-\newcommand*\y[1]{\colorbox{yellow}{#1}}
-\newcommand*\implica{ \underbrace{ \Longrightarrow }_{implica}}
-\newcommand*\fand{ \underbrace{ \land }_{e}}
-\newcommand*\for{ \underbrace{ \lor }_{oppure}}
-\newcommand*\quindi{ \underbrace{ \Longleftrightarrow }_{quindi}}
-
-\usepackage{fancyhdr}
-\pagestyle{fancy}
-\renewcommand{\chaptermark}[1]{%
-\markboth{\chaptername
-\ \thechapter.\ #1}{}}
-\fancyhf{}
-\fancyhead[L]{\textsl{\leftmark}}
-\fancyhead[R]{\textsl{FIA - A.A. 23/24 }}
-\fancyfoot[C]{\thepage}
-
 
 \title{CCFDetector}
 \author{Marco Santoriello}
-\date{Dicembre 2023}
+\date{Gennaio 2024}
 
 \begin{document}
 \begin{titlepage}
@@ -63,7 +45,7 @@
         \centering
         \includegraphics[width=0.35\textwidth]{img/logo_unisa.png}
     \end{figure}
-    
+
     \begin{center}
         %Corso di Laurea
     	\normalsize{ Corso di Laurea in informatica }\\
@@ -77,7 +59,7 @@
         %Candidato
     	{\large{Scritto da: \\ \bf Marco Santoriello\\ Mat. 0512114100}}
     \end{minipage}
-    
+
     \vspace{90mm}
     %Anno Accademico
     \centering{\large \uppercase{ Anno Accademico 2023/2024 }}
@@ -87,19 +69,50 @@
 \setcounter{tocdepth}{3} %IMPOSTO LIVELLO PROFONDITA' INDICE
 
 \tableofcontents
+\newpage
 
-\chapter*{Problem Statement}
-\addcontentsline{toc}{chapter}{\protect\numberline{}Problem Statement}
-    \section*{Introduzione}
-    \addcontentsline{toc}{section}{\protect\numberline{}Introduzione}
-        Negli ultimi anni, sempre più piede hanno preso i pagamenti elettronici, al punto che, anche in Italia, per legge, ogni commerciante deve essere munito di un dispositivo che permetta al cliente di pagare utilizzando la propria carta di credito, rischiando, in caso di mancato adempimento a questa legge, ingenti sanzioni pecuniarie.\\
-        
-        Come è facile immaginare, questo cambiamento nel modo in cui il denaro viene messo in circolazione ha interessato, non poco, criminali e truffatori (i cosiddetti \textit{scammers}), i quali hanno trovato non pochi modi di impossessarsi illecitamente, in maniera fisica o meno, delle carte di credito altrui.\\
-    
-        Basti pensare che negli Stati Uniti, secondo la \textit{Federal Trade Commission}, al tipologia di furti di identità più diffusi è proprio correlata alle frodi relative alle carte di credito.\\
-        Queste frodi possono avvenire in svariati modiò per citarne alcuni: si parte dal furto vero e proprio della carta di credito, fino ad arrivare all'appropriazione dei soli dati della carta che abilitano al pagamento, passando per la clonazione delle carte e per l'utilizzo di dispositivi \textit{contactless} in posti affollati in prossimità dei portafogli delle ignare vittime.\\
-    
-        Questo progetto nasce con lo scopo di addestrare un modello di Machine Learning che permetta una facile ed affidabile individuazione delle transazioni fraudolente.
 
-                
+\section{Introduzione}
+    Negli ultimi anni, sempre più piede hanno preso i pagamenti elettronici, al punto che, anche in Italia, per legge, ogni commerciante deve essere munito di un dispositivo che permetta al cliente di pagare utilizzando la propria carta di credito, rischiando, in caso di mancato adempimento a questa legge, ingenti sanzioni pecuniarie.\\
+
+    Come è facile immaginare, questo cambiamento nel modo in cui il denaro viene messo in circolazione ha interessato notevolmente criminali e truffatori (i cosiddetti \textit{scammers}), i quali hanno trovato non pochi modi di impossessarsi illecitamente, in maniera fisica o meno, delle carte di credito altrui.\\
+
+    Basti pensare che negli Stati Uniti, secondo la \textit{Federal Trade Commission}, la tipologia di furti di identità più diffusi è proprio correlata alle frodi relative alle carte di credito.\\
+    Queste frodi possono avvenire in svariati modi: si parte dal furto vero e proprio della carta di credito, fino ad arrivare, tramite diversi metodi, all'appropriazione dei soli dati della carta che abilitano al pagamento, passando per la clonazione delle carte e per l'utilizzo di dispositivi \textit{contactless} in posti affollati in prossimità dei portafogli delle ignare vittime.\\
+
+    Questo progetto nasce con lo scopo di addestrare un modello di Machine Learning che permetta una facile ed affidabile individuazione delle transazioni fraudolente.
+
+    \subsection{Specifica PEAS}
+        La specifica PEAS (Performance, Environment, Actuators, Sensors) è un sistema che permette di descrivere l'ambiente operativo di un agente intelligente. L'obiettivo principale del progetto è quello di massimizzare la capacità dell'agente di rilevare transazioni fraudolente. L'ambiente in cui l'agente dovrà operare è di seguito descritto:
+        \begin{itemize}
+            \item Performance:
+            \item Environment:
+            \item Actuators:
+            \item Sensors:
+        \end{itemize}
+
+    \subsection{Caratteristiche dell'ambiente}
+        % TO-DO
+
+    \subsection{Analisi del Problema}
+        %TO-DO
+
+\section{Data Understanding}
+    \subsection{Data Collection}
+        Definito il Problem Statement, passo all'individuazione del dataset adatto per l'addestramento e la validazione del modello.\\
+        Trattandosi di dati particolarmente sensibili, il numero di dataset presenti online non è particolarmente alto. Tuttavia, un \href{https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud}{dataset} in particolare, sembra essere particolarmente rilevante per gli scopi di questo progetto.
+
+    \subsection{Data Description}
+        Procedo con lo studio dei dati selezionati per guadagnarne una maggiore comprensione. Il dataset individuato, realizzato e rilasciato dai Cardholders europei, contiene l'insieme delle transazioni effettuate da carte di credito in due giorni del settembre 2013.\\
+        I dati presenti sono tutti numerici e sono il risultato di una trasformazione PCA. La Principal Component Analysis è una tecnica di riduzione della dimensionalità di un dataset, le cui variabili vengono trasformate in un nuovo set di variabili, che sono combinazioni lineari delle variabili originali (il risultato finale è, dunque, un nuovo dataset).\\
+        Chiaramente, per motivi di riservatezza, non sono state fornite le caratteristiche originali, di cui non sappiamo nulla. Le componenti principali ottenute con PCA sono le features V1, V2, ..., V28. Le uniche caratteristiche che non sono state sottoposte alla trasformazione PCA sono \textit{Time} e \textit{Amount}: \textit{Time} rappresenta il tempo, in secondi, trascorso tra ogni transazione e la prima transazione del dataset, mentre \textit{Amount} rappresenta l'ammontare, in USD, della transazione. La variabile \textit{Class}, infine, è la nostra variabile dipendente che assume valore 0, se la transazione è autorizzata (dunque lecita), oppure 1, se la transazione risulta essere fraudolenta.\\
+
+    \subsection{Data Quality}
+        La prima cosa che controllo è se il dataset è bilanciato o meno. Su un totale di 284807 transazioni, soltanto 492 di esse risultano essere fraudolente: si tratta dello 0.172\% del totale. Pertanto, il dataset risulta essere \textit{altamente sbilanciato}.
+
+        Non ci sono valori \textit{null} all'interno del dataset e, l'ammontare delle transazioni fraudolente risulta essere, in media, di 88,2 USD. Dunque, è in media più bassa delle transazioni lecite, che ammontano, in media a 122,2 USD. Altro aspetto da tenere in considerazione è che le features da V1 a V28 sono già state scalate in quanto sottoposte a trasformazione PCA.\\
+        L'utilizzo di un dataset così sbilanciato, porterebbe alla costruzione di un modello altamente impreciso e che, probabilmente, si \textit{adatterà troppo (overfitting)} al problema, in quanto andrebbe ad assumere la maggior parte delle transazioni come non fraudolente, siccome queste costituiscono la stragrande maggioranza dei dati.
+
+
+
 \end{document}
