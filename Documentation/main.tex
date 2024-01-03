@@ -17,6 +17,7 @@
 \usepackage{amsmath,amssymb}
 \usepackage{hyperref}
 \usepackage{amsmath}
+\usepackage{enumerate}
 % Imposto colore hyperlinks
 \hypersetup{
     colorlinks=true,
@@ -115,14 +116,10 @@
 
         Non ci sono valori \textit{null} all'interno del dataset e l'ammontare delle transazioni fraudolente risulta essere, in media, di 88,2 USD. Media che risulta essere più bassa di quella delle transazioni lecite che, invece, ammonta a 122,2 USD. Altro aspetto da tenere in considerazione è che le features da V1 a V28 sono già state scalate in quanto sottoposte a trasformazione PCA.\\
         L'utilizzo di un dataset così sbilanciato, porterebbe alla costruzione di un modello altamente impreciso e che, probabilmente, si \textit{adatterà troppo (overfitting)} al problema, in quanto andrebbe ad assumere la maggior parte delle transazioni come non fraudolente, siccome queste costituiscono la stragrande maggioranza dei dati.\\
-        Un'altra delle conseguenze relative all'utilizzo di un dataset sbilanciato, è la mancata comprensione della correlazione tra le varie caratteristiche. Infatti, andando a generare una matrice di correlazione, mostrata nella seguente figura, usando i dati attuali, non osservo particolari caratteristche correlate tra loro. Un'altra matrice di correlazione verrà generata una volta aver terminato il bilanciamento dei dati e verrà confrontata con la seguente.
-        \begin{figure}[H]
-            \centering
-            \includegraphics[width=.6\textwidth]{img/correlationMatrixUnbalanced.png}
-            \caption[short]{}
-        \end{figure}
+        Un'altra delle conseguenze relative all'utilizzo di un dataset sbilanciato, è la mancata comprensione della correlazione tra le varie caratteristiche.
 
 \section{Data Preparation}
+    Dopo aver studiato il dataset e averne ottenuto un certo grado di comprensione, passo alla fase di \textit{Data Preparation}, che produrrà il dataset pronto per essere dato in input al modello.
     \subsection{Data Cleaning}
         La fase di \textit{Data Cleaning}, è la fase in cui si vanno a gestire dati mancanti o rumorosi.
         Il dataset considerato non presenta alcun valore \textit{null} o rumoroso, per cui si può passare alla fase di \textit{Feature Scaling}.
@@ -133,7 +130,7 @@
         \begin{figure}[H]
             \centering
             \includegraphics[width=.9\textwidth]{img/valuesDistribution.png}
-            \caption[short]{}
+            \caption[short]{Distribuzioni delle variabili da scalare}
         \end{figure}
         La distribuzione dei valori di \textit{Time} mostra una certa periodicità o struttura ciclica, suggerendo che alcune ore del giorno potrebbero essere più propense a transazioni rispetto ad altre.\\
         La distribuzione dei valori di \textit{Amount}, invece, risulta essere \textit{fortemente asimmetrica} a destra: la maggior parte delle transazioni risultano essere caratterizzate da importi relativamente bassi, mentre poche sono quelle con importi più alti (queste ultime transazioni rappresentano degli \textit{outliers}, cioè dei valori anomali rispetto al resto della distribuzione).\\
@@ -144,7 +141,67 @@
             $\text{Robust Scaling}(x) = \frac{x - \text{Mediana}(x)}{\text{IQR}(x)}$
         \end{center}
 
+    \subsection{Feature Selection}
+        Procedo con la fase di Feature Selection, nella quale, appunto, vado ad individuare e selezionare le caratteristiche con potenza predittiva più alta, scartando quelle con potenza predittiva più bassa che potrebbero rendere il futuro modello più impreciso o peggiorarne le performances.
+        \subsubsection{Correlation Matrix}
+            La tecnica che utilizzo è nota come \textbf{Matrice di Correlazione}. Tale matrice mostra i \textit{coefficienti di correlazione} tra coppie di variabili. Tali coefficienti possono assumere valori racchiusi nell'intervallo $[-1, 1]$. Valori vicini a 1 indicano che le due variabili sono \textbf{correlate positivamente}, valori vicino a -1 indicano che le due variabili sono \textbf{correlate negativamente}, valori vicini a 0, infine, indicano che tra le due variabili \textbf{non intercorre alcuna relazione}.
+            \begin{figure}[H]
+                \centering
+                \includegraphics[width=.6\textwidth]{img/correlationMatrix.png}
+                \caption[short]{Matrice di correlazione}
+            \end{figure}
+            Il numero delle features è elevato, dunque la lettura del grado di  correlazione tra loro non risulta essere particolarmente agevole. Per tale ragione, decido di andare a generare un secondo grafico (diviso, per comodità, in due parti) il quale mostra soltanto le correlazioni di ciascuna caratteristica con la variabile target.
+            \begin{figure}[H]
+                \centering
+                \includegraphics[width=.3\textwidth]{img/correlationFigure.png}
+                \caption[short]{Correlazione tra features e variabile target}
+            \end{figure}
+            Le caratteristiche che andrò a scartare in seguito, sono quelle che hanno un grado di correlazione con la feature \textit{Class} compreso nell'intervallo [-0.1, 0.1]. Quelle che manterrò sono, invece, la V4 e la V11, le quali sono correlate positivamente con \textit{Class}, e V7, V3, V16, V10, V12, V14, V17, che sono correlate negativamente con la variabile target.
 
 
 
+    \subsection{Data Balancing}
+        Come analizzato nella fase di Data Understanding, il dataset risulta essere altamente \textit{unbalanced}. Addestrare un modello su un dataset del genere, comporterebbe un elevato rischio di overfitting. Per ridurlo, è necessario andare a bilanciare il dataset.
+        \subsubsection{Data Splitting}
+            Prima di procedere, divido il dataset in \textit{training set} e \textit{test set}. E' cruciale effettuare questa divisione prima di effettuare qualsiasi operazione di sampling per evitare di incappare in problemi di \textbf{data leakage}. Infatti, sarebbe un errore testare e valutare il modello su dei dati bilanciati poiché questi dovrebbero rispecchiare la realtà quanto più è possibile. Se così non fosse, infatti, il modello effettuerebbe predizioni accurate in fase di addestramento, ma non in fase di rilascio.\\
+            Dunque, innanzitutto separo le features dalla variabile target. Per fare questo, utilizzo il metodo \textit{iloc} della libreria pandas: in particolare, nella prima istruzione seleziono tutte le righe, tramite \textit{:}, delle prime nove colonne (da 0 a 8) e poi, tramite \textit{values}, converto in un array numpy; nella seconda istruzione, invece, seleziono tutte le righe della decima colonna (di indice 9)  del dataframe.
+            \begin{verbatim}
+                # Separating features and target
+                X = df1.iloc[:,:9].values
+                y = df1.iloc[:,9].values
+            \end{verbatim}
+            Successivamente, divido il dataset assegnando il 30\% dei dati al test set, mentre il restante 70\% di essi costituiranno i dati di addestramento.
+        \subsubsection{Sampling Techniqe Selection}
+            Per bilanciare un dataset, possiamo utilizzare due tecniche:
+            \begin{itemize}
+                \item \textbf{undersampling},
+                \item \textbf{oversampling}.
+            \end{itemize}
+            La tecnica di undersampling, consiste nella rimozione di samples dalla classe di maggioranza che, nel nostro caso, è quella delle transazioni non fraudolente. Tuttavia, scegliendo di utilizzare questa tecnica, mi ritroverei con un dataset eccessivamente piccolo, che vedrebbe perdute la maggior parte delle informazioni, avendo soltanto, come osservato in precedenza, 492 samples della classe di minoranza (Frauds).\\
+            Allo stesso tempo, la tecnica di oversampling, che, invece, consiste nella generazione casuale di nuovi samples della classe di minoranza, potrebbe condurre il modello verso l'overfitting, in quanto, ancora, il numero dei samples della classe di minoranza e' eccessivamente basso.\\
+            Per tale ragione, decido di utilizzare una tecnica nota come \textbf{Synthetic Minority Oversampling Tecnhique} (\textbf{SMOTE}).
+            SMOTE e' una tecnica di oversampling che, invece di creare copie di istanze esistenti della classe di minoranza, genera nuove istanze (dette istanze sintetiche) attraverso l'interpolazion, dunque mi permette di mitigare il rischio di overfitting. Di seguito illustrato il funzionamento:
+            \begin{enumerate}[i.]
+                \item Seleziona una istanza random all'interno della classe di minoranza
+                \item Identifica k vicini per il dato appena selezionato
+                \item Seleziona uno di questi vicini per il nuovo dato da creare
+                \item Calcola la distanza vettoriale tra il punto e il vicino selezionati
+                \item Moltiplica tale distanza per un numero casuale compreso tra 0 e 1
+            \end{enumerate}
+            \begin{figure}[H]
+                \centering
+                \includegraphics[width=.45\textwidth]{img/SMOTE.png}
+                \caption[short]{Meccanismo SMOTE}
+            \end{figure}
+            Prima dell'applicazione di SMOTE, all'interno dei dati di training si hanno:
+            \begin{itemize}
+                \item N. transazioni fraudolente: 345
+                \item N. transazioni non fraudolente: 199019
+            \end{itemize}
+            Dopo l'applicazione di SMOTE, invece, si hanno:
+            \begin{itemize}
+                \item N. transazioni fraudolente: 199019
+                \item N. transazioni non fraudolente: 199019
+            \end{itemize}
+\section{Modeling}
 \end{document}
