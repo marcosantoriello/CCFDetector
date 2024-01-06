@@ -133,15 +133,31 @@
             \item [-] \textit{Swipe Transaction}: pagamento effettuato utilizzando la striscia magnetica della carta. Tale tipologia di pagamento non prevede l'inserimento del PIN (perlomeno se il pagamento è al di sotto di una determinata soglia) per autorizzare la transazione.
             \item [-] \textit{Online Transaction}: pagamento online, effettuato inserendo i dati della carta manualmente, all'interno di un form. Anche in questo caso, a seconda dell'importo della transazione, potrebbe essere richiesta una misura di sicurezza aggiuntiva, oppure no.
         \end{itemize}
+        Per poter continuare ad esplorare i dati, devo effettuare delle operazioni di conversione e splitting, anticipando, così, la fase di \textbf{data cleaning}.
+        Innanzitutto, la feture \textit{Amount}, contenente l'importo di ogni transazione in dollari, non risulta essere in formato numerico, per cui vado a convertirne tutti i suoi valori in float, non prima di aver rimosso il simbolo della valuta che precede le cifre.\\
+        Gestisco, poi, la caratteristica \textit{Time} che provvedo a dividere nelle caratteristiche \textit{Hour} e \textit{Minute}, rimuovendola, infine, dal dataset.
+        Vado ora ad analizzare la distribuzione delle varie features, per cercare di capire meglio eventuali patterns legati con le frodi.\\
+        In particolare, dal seguente grafico, osservo che la maggior parte degli importi che caratterizzano le transazioni fraudolente sono relativamente bassi, compresi, infatti nell'intervallo che va da 0 a 250 USD.
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=.4\textwidth]{img/DistribuzioneImporto.png}
+            \caption[short]{Distrubuzione degli importi relativi alle transazioni fraudolente}
+        \end{figure}
+        Inoltre, il metodo di pagamento maggiormente interessato da questo fenomeno, risulta essere il pagamento online. Invece, come mi aspettavo dalla precedente analisi fatta sui metodi di pagamento, quello tramite chip risulta essere il meno interessato, rivelandosi, dunque, il metodo piu' sicuro.
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=.4\textwidth]{img/DistribuzioneMetodoPagamento.png}
+            \caption[short]{Distribuzione dei metodi di pagamento}
+        \end{figure}
 
     \subsection{Data Quality}
-        Relativamente alla qualità dei dati, la prima cosa che noto è che le colonne \textit{Merchant State}, \textit{Zip}, ed,     in particolare \textit{Errors}, contengono dei valori nulli.
+        Relativamente alla qualità dei dati, la prima cosa che noto è che le colonne \textit{Merchant State}, \textit{Zip}, ed, in particolare \textit{Errors}, contengono dei valori nulli.
         \begin{figure}[H]
             \centering
             \includegraphics[width=.6\textwidth]{img/NullValuesPercentage.png}
             \caption[short]{Percentuale valori nulli per colonna}
         \end{figure}
-        Inoltre, le caratteristiche \textit{Merchant State} e \textit{Zip} possono essere ricavate da \textit{Merchant City}, dunque potrebbe essere conveniente, contenendo valori nulli, rimuoverle. Ci sono poi caratteristiche, come Time, Amount e la variabile target che sarebbe conveniente avere come interi.
+        Inoltre, le caratteristiche \textit{Merchant State} e \textit{Zip} possono essere ricavate da \textit{Merchant City}, dunque potrebbe essere conveniente, contenendo valori nulli, rimuoverle.
         Procedo, dunque, a verificare è se il dataset è bilanciato o meno. Il numero di transazioni fraudolente è pari a 388, cioe' lo 0.129\% del totale delle transazioni. Il dataset risulta essere altamente sbilanciato, come mostrato dal seguente grafico:
         \begin{figure}[H]
             \centering
@@ -183,7 +199,6 @@
         \end{center}
         Come risulta dall'osservazione dei valori di questa feature, i valori nulli sembrano corrispondere al caso in cui non si verifica alcun errore. Per tale ragione, decido di rimpiazzare tutti i valori nulli con il valore \textit{No error}. Tale modo di gestire i valori nulli si definisce \textbf{imputazione deduttiva}.\\
         Come secondo step, vado a rimuovere le colonne \textit{Merchant State} e \textit{Zip}. Esse infatti, posso essere ricavate dalla feature \textit{Merchant City}, per cui, contenendo specialmente dei valori nulli, risulta conveniente la loro rimozione dal dataset.\\
-        La feture \textit{Amount}, contenente l'importo di ogni transazione in dollari, non risulta essere in formato numerico, per cui vado a convertirne tutti i suoi valori in float, non prima di aver rimosso il simbolo della valua che precede le cifre.\\
-        Gestisco, infine, la caratteristica \textit{Time} che, siccome non posso convertire in intero, provvedo a dividere nelle caratteristiche \textit{Hour} e \textit{Minute}, rimuovendola, infine dal dataset.
+
 
 \end{document}
