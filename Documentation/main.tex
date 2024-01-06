@@ -198,7 +198,20 @@
             \end{tabular}
         \end{center}
         Come risulta dall'osservazione dei valori di questa feature, i valori nulli sembrano corrispondere al caso in cui non si verifica alcun errore. Per tale ragione, decido di rimpiazzare tutti i valori nulli con il valore \textit{No error}. Tale modo di gestire i valori nulli si definisce \textbf{imputazione deduttiva}.\\
-        Come secondo step, vado a rimuovere le colonne \textit{Merchant State} e \textit{Zip}. Esse infatti, posso essere ricavate dalla feature \textit{Merchant City}, per cui, contenendo specialmente dei valori nulli, risulta conveniente la loro rimozione dal dataset.\\
+        Come secondo step, vado a rimuovere le colonne \textit{Merchant State} e \textit{Zip}. Esse, infatti, posso essere ricavate dalla feature \textit{Merchant City}, per cui, contenendo specialmente dei valori nulli, risulta conveniente la loro rimozione dal dataset.\\
+        Necessitando per il futuro addestramento del modello di dati numerici, vado a convertire le variabili categoriche \textit{Use Chip}, \textit{Merchant City} ed \textit{Errors} in variabili numeriche, utilizzando il metodo \textbf{LabelEncoder()}, della libreria \textit{scikit-learn}. Tale metodo assegna un intero univoco ad ogni categoria, in ordine di scoperta.
+    \subsection{Feature Scaling}
+        Nella fase di Feature Scaling, proseguo con l'osservazione delle distribuzioni dei valori delle varie caratteristiche, poiché addestrare un modello su un dataset che contiene colonne con insiemi di valori molto diversi tra loro, potrebbe portare tale modello a confondersi, sovrastimando o sottostimando l'importanza delle varie caratteristiche.\\
+        Le varie features, tra loro, assumono valori compresi in diversi ranges, per tale ragione, decido di effettuare la normalizzazione su tutte, tranne che sulla variabile dipendente.\\
+        Per lo scopo, utilizzo la tecnica di \textbf{Normalizzazione min-max}, che è una delle più comuni e diffuse tecniche di normalizzazione.
+        Di seguito riportata la formula della Normalizzazione min-max:
+        \begin{center}
+            \[
+                x_{\text{norm}} = a + \frac{{x - \min(X)}}{{\max(X) - \min(X)}} \cdot (b - a)
+            \]
+        \end{center}
+        Normalizzati i valori, passo alla fase di Feature Selection.
+    \subsection{Feature Selection}
 
 
 \end{document}
