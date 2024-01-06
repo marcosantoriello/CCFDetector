@@ -19,7 +19,9 @@
 \usepackage{amsmath}
 \usepackage{enumerate}
 \usepackage{enumitem}
+\setlist{nolistsep}
 \setlist[enumerate]{align=left}
+\setlist[itemize]{align=left}
 % Imposto colore hyperlinks
 \hypersetup{
     colorlinks=true,
@@ -190,7 +192,28 @@
             \]
         \end{center}
         Normalizzati i valori, passo alla fase di Feature Selection.
+
     \subsection{Feature Selection}
-
-
+        Procedo con la fase di Feature Selection, in cui, come suggerisce il nome, vado ad individuare e selezionare le features che hanno potenza predittiva più alta, scartando quelle con potenza predittiva più bassa. Infatti, queste ultime potrebbero rendere il futuro modello più impreciso o peggiorarne le perfomances.\\
+        La tecnica che utilizzo è nota come \textbf{Matrice di Correlazione} (senza escludere la possibilità di integrare l'analisi con le osservazioni fatte in fase di data exploration). Tale matrice mostra i \textit{coefficienti di correlazione} tra coppie di variabili. I coefficienti possono assumere valori nell'intervallo [-1, 1]. Valori vicini a 1 indicano che le due variabili sono \textbf{correlate positivamente}; valori vicini a -1 indicano che le due variabili sono \textbf{correlate negativamente}; valori vicini a 0, infine, indicano che tra le due variabili \textbf{non itercorre alcuna relazione}.
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=.6\textwidth]{img/CorrelationMatrix.png}
+            \caption[short]{Matrice di correlazione}
+        \end{figure}
+        Per avere una rappresentazione ancora più chiara, vado a mostrare solo il grado di relazione che ciascuna variabile ha con la variabile dipendente.
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=.5\textwidth]{img/Correlation.png}
+            \caption[short]{Correlazione tra features e variabile target}
+        \end{figure}
+        Le variabili maggiormente correlate con il target sono:
+        \begin{itemize}
+            \item [-] \textit{Amount}
+            \item [-] \textit{Merchant City}
+            \item [-] \textit{MCC}
+            \item [-] \textit{Use Chip}
+            \item [-] \textit{Errors}
+        \end{itemize}
+        Dunque, vado a scartare le restanti features, ad eccezione di \textit{Year} e \textit{Hour}, che dall'analisi iniziale, effettuata nella fase di esplorazione dei dati, sembravano avere una qualche correlazione con le transazioni fraudolente.
 \end{document}
