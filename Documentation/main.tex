@@ -216,4 +216,51 @@
             \item [-] \textit{Errors}
         \end{itemize}
         Dunque, vado a scartare le restanti features, ad eccezione di \textit{Year} e \textit{Hour}, che dall'analisi iniziale, effettuata nella fase di esplorazione dei dati, sembravano avere una qualche correlazione con le transazioni fraudolente.
+    \subsection{Data Balancing}
+        Come analizzato nella fase di Data Understanding, il dataset risulta essere altamente \textit{unbalanced}. Addestrare un modello su un dataset del genere, comporterebbe un elevato rischio di overfitting. Per ridurlo, è necessario andare a bilanciare il dataset.
+        \subsubsection{Data Splitting}
+            Prima di procedere, divido il dataset in \textit{training set} e \textit{test set}. E' cruciale effettuare questa divisione prima di effettuare qualsiasi operazione di sampling per evitare di incappare in problemi di \textbf{data leakage}. Infatti, sarebbe un errore testare e valutare il modello su dei dati bilanciati poiché questi dovrebbero rispecchiare la realtà quanto più è possibile. Se così non fosse, infatti, il modello effettuerebbe predizioni accurate in fase di addestramento, ma non in fase di rilascio.\\
+            Dunque, innanzitutto separo le features dalla variabile target. Per fare questo, utilizzo il metodo \textit{iloc} della libreria pandas: in particolare, nella prima istruzione seleziono tutte le righe, tramite \textit{:}, delle prime sette colonne (da 0 a 6) e poi, tramite \textit{values}, converto in un array numpy; nella seconda istruzione, invece, seleziono tutte le righe della ottava colonna (di indice 7)  del dataframe.
+            \begin{verbatim}
+                # Separating features and target
+                X = df1.iloc[:,:7].values
+                y = df1.iloc[:,7].values
+            \end{verbatim}
+            Successivamente, divido il dataset assegnando il 20\% dei dati al test set, mentre il restante 80\% di essi costituiranno i dati di addestramento.
+        \subsubsection{Sampling Techniqe Selection}
+            Per bilanciare un dataset, posso utilizzare principalmente due tecniche (nelle varie declinaizoni):
+            \begin{itemize}
+                \item \textbf{undersampling},
+                \item \textbf{oversampling}.
+            \end{itemize}
+            La tecnica di undersampling, in generale, consiste nella rimozione di samples dalla classe di maggioranza che, nel nostro caso, è quella delle transazioni non fraudolente. Tuttavia, scegliendo di utilizzare questa tecnica, mi ritroverei con un dataset eccessivamente piccolo, che vedrebbe perdute la maggior parte delle informazioni, avendo soltanto, come osservato in precedenza, 388 samples della classe di minoranza (Frauds).\\
+            Allo stesso tempo, la tecnica di oversampling, che, invece, consiste nella generazione casuale di nuovi samples della classe di minoranza, potrebbe condurre il modello verso l'overfitting, in quanto, ancora, il numero dei samples della classe di minoranza e' eccessivamente basso.\\
+            Per tale ragione, decido di utilizzare una tecnica nota come \textbf{Synthetic Minority Oversampling Tecnhique} (\textbf{SMOTE}).
+            SMOTE e' una tecnica di oversampling che, invece di creare copie di istanze esistenti della classe di minoranza, genera nuove istanze (dette istanze sintetiche) attraverso l'interpolazion. Dunque, mi permette di mitigare il rischio di overfitting. Di seguito illustrato il funzionamento:
+            \begin{enumerate}
+                \item Seleziona una istanza random all'interno della classe di minoranza
+                \item Identifica k vicini per il dato appena selezionato
+                \item Seleziona uno di questi vicini per il nuovo dato da creare
+                \item Calcola la distanza vettoriale tra il punto e il vicino selezionati
+                \item Moltiplica tale distanza per un numero casuale compreso tra 0 e 1
+            \end{enumerate}
+            \begin{figure}[H]
+                \centering
+                \includegraphics[width=.45\textwidth]{img/SMOTE.png}
+                \caption[short]{Meccanismo SMOTE}
+            \end{figure}
+            Prima dell'applicazione di SMOTE, all'interno dei dati di training si hanno:
+            \begin{itemize}
+                \item N. transazioni fraudolente: 307
+                \item N. transazioni non fraudolente: 239693
+            \end{itemize}
+            Dopo l'applicazione di SMOTE, invece, si hanno:
+            \begin{itemize}
+                \item N. transazioni fraudolente: 239693
+                \item N. transazioni non fraudolente: 239693
+            \end{itemize}
+
+
+
+
 \end{document}
