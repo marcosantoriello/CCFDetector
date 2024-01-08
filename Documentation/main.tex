@@ -63,7 +63,7 @@
     \end{center}
     \begin{minipage}[t]{0.4\textwidth}\raggedright
         %Candidato
-    	{\large{Scritto da: \\ \bf Marco Santoriello\\ Mat. 0512114100}}
+    	{\large{Realizzato da: \\ \bf Marco Santoriello\\ Mat. 0512114100}}
     \end{minipage}
 
     \vspace{90mm}
@@ -80,25 +80,43 @@
 
 \section{Introduzione}
     Negli ultimi anni, sempre più piede hanno preso i pagamenti elettronici, al punto che, anche in Italia, per legge, ogni commerciante deve essere munito di un dispositivo che permetta al cliente di pagare utilizzando la propria carta di credito, rischiando, in caso di mancato adempimento a questa legge, ingenti sanzioni pecuniarie.\\
-    Come è facile immaginare, questo cambiamento nel modo in cui il denaro viene messo in circolazione ha interessato notevolmente criminali e truffatori (i cosiddetti \textit{scammers}), i quali hanno trovato non pochi modi di impossessarsi illecitamente, in maniera fisica o meno, delle carte di credito altrui.
-    Basti pensare che negli Stati Uniti, secondo la \textit{Federal Trade Commission}, la tipologia di furti di identità più diffusi è proprio correlata alle frodi relative alle carte di credito.\\
+    Come è facile immaginare, questo cambiamento nel modo in cui il denaro viene messo in circolazione ha interessato notevolmente criminali e truffatori (i cosiddetti \textit{scammers}), i quali hanno trovato non pochi modi di impossessarsi illecitamente delle carte di credito altrui, o dei relativi dati associati ad esse.
+    Basti pensare che negli Stati Uniti, secondo la \textit{Federal Trade Commission}, la tipologia di furto di identità più diffusa è proprio relativa alle frodi che interessano pagamenti elettronci.\\
     Queste frodi possono avvenire in svariati modi: si parte dal furto vero e proprio della carta di credito, fino ad arrivare, tramite diversi metodi, all'appropriazione dei soli dati della carta che abilitano al pagamento, passando per la clonazione delle carte e per l'utilizzo di dispositivi \textit{contactless} in posti affollati in prossimità dei portafogli delle ignare vittime.\\
     Questo progetto nasce con lo scopo di addestrare un modello di Machine Learning che permetta una facile ed affidabile individuazione delle transazioni fraudolente, con lo scopo di bloccarle tempestivamente per evitare sottrazioni di denaro alle vittime.
+    Il progetto è consultabile nella sua interezza su \href{https://github.com/marcosantoriello/CCFDetector}{GitHub}.
 
     \subsection{Specifica PEAS}
-        La specifica PEAS (Performance, Environment, Actuators, Sensors) è un sistema che permette di descrivere l'ambiente operativo di un agente intelligente. L'obiettivo principale del progetto è quello di massimizzare la capacità dell'agente di rilevare transazioni fraudolente. L'ambiente in cui l'agente dovrà operare è di seguito descritto:
+        La specifica PEAS (Performance, Environment, Actuators, Sensors) è un sistema che permette di descrivere l'ambiente operativo di un agente intelligente. L'obiettivo principale del progetto è quello di massimizzare la capacità dell'agente di rilevare transazioni fraudolente. Di seguito la specifica PEAS:
         \begin{itemize}
-            \item Performance:
-            \item Environment:
-            \item Actuators:
-            \item Sensors:
+            \item Performance: ROC-AUC Curve, precision, recall, f1.
+            \item Environment: ambiente delle transazioni finanziarie.
+            \item Actuators: algoritmo di classificazione.
+            \item Sensors: dati ricevuti in input relativi ad una transazione.
         \end{itemize}
 
     \subsection{Caratteristiche dell'ambiente}
-        % TO-DO
+        L'ambiente operativo dell'agente risulta essere:
+        \begin{itemize}
+            \item \textbf{Single-agent}.
+            \item \textbf{Completamente osservabile}: attraverso i sensori, l'agente godrà di una conoscenza completa dell'ambiente.
+            \item \textbf{Dinamico}: l'ambiente delle transazioni finanziarie è in continua evoluzione. Di conseguenza lo sono anche i patterns relativi alle frodi.
+            \item \textbf{Discreto}:le variabili assumono valori in un limitato intervallo; alcune, invece, assumono valori distinti e separati.
+            \item \textbf{Episodico}: L'esperienza dell'agente è divisa in episodi atomici, dove ciascun episodio consiste dall'eseguire una singola azione.
+            \item \textbf{Stocastico}: Lo stato dell'ambiente non è determinato dallo stato corrente o dall'azione eseguita dall'agente.
+        \end{itemize}
 
     \subsection{Analisi del Problema}
-        %TO-DO
+        Il progetto mira, dunque, alla costruzione di un modello di Machine Learning, volto alla risoluzione di un problema di \textbf{apprendimento supervisionato}. In particolare, come verrà reso evidente da questo documento nelle successive sezioni, il problema da affrontare risulta essere di \textbf{classificazione binaria}, avendo da predire una variabile che puo' assumere valori 0, oppure 1.\\
+        Gli strumenti utilizzati per la realizzazione sono elencati di seguito:
+        \begin{itemize}
+            \item \textbf{Python}.
+            \item \textbf{Jupyter Notebook}.
+            \item \textbf{PyCharm} come IDE.
+            \item \textbf{LaTeX} per la documentazione.
+            \item \textbf{Canva} per la presentazione.
+            \item \textbf{GitHub} per il versioning.
+        \end{itemize}
 
 \section{Data Understanding}
     \subsection{Data Collection}
