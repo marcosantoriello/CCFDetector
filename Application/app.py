@@ -5,6 +5,8 @@ import pickle
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import MinMaxScaler
 
+label_encoder = LabelEncoder()
+
 
 def load_model():
     # Carica il modello addestrato con Pickle
@@ -13,10 +15,10 @@ def load_model():
     return model
 
 
-def load_label_encoder():
-    with open('label_encoder.pkl', 'rb') as le_file:
-        label_encoder = pickle.load(le_file)
-    return label_encoder
+# def load_label_encoder():
+    # with open('label_encoder.pkl', 'rb') as le_file:
+        # label_encoder = pickle.load(le_file)
+    # return label_encoder
 
 
 def load_scaler():
@@ -29,10 +31,10 @@ def load_scaler():
 
 def prepare_data(df, label_encoder_arg, scaler_arg):
     # Trasforma in valori numerici con LabelEncoder
-    df["Merchant City"] = label_encoder_arg.transform(df["Merchant City"])
-    df["Use Chip"] = label_encoder_arg.transform(df["Use Chip"])
-    df["Errors"] = label_encoder_arg.transform(df["Errors"])
-
+    df["Merchant City"] = label_encoder_arg.fit_transform(df["Merchant City"])
+    df["Use Chip"] = label_encoder_arg.fit_transform(df["Use Chip"])
+    df["Errors"] = label_encoder_arg.fit_transform(df["Errors"])
+    st.write(df)
     # Applica MinMax Scaler
     to_normalize = df.columns
     df[to_normalize] = scaler_arg.transform(df[to_normalize])
@@ -96,11 +98,10 @@ def main():
             'Errors': [errors]
         })
 
-
         features = ["Amount", "Merchant City", "Hour", "MCC", "Use Chip", "Errors"]
         st.write(user_data[features])
         # Lavorazione dei dati
-        label_encoder = load_label_encoder()
+        # label_encoder = load_label_encoder()
         scaler = load_scaler()
         user_data = prepare_data(user_data, label_encoder, scaler)
 
