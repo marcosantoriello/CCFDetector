@@ -121,8 +121,8 @@
 \section{Data Understanding}
     \subsection{Data Collection}
         Definito il Problem Statement, passo all'individuazione del dataset adatto per l'addestramento e la validazione del modello.\\
-        Trattandosi di dati particolarmente sensibili, il numero di dataset presenti online non è molto alto. Il primo \href{https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud}{dataset} ritenuto particolarmente interessante per gli scopi di questo progetto, risultava avere quasi tutte le features criptate (per ovvi motivi di privacy) e delle quali non veniva fornita alcuna spiegazione, trattandosi di transazioni reali, rivelandosi non ottimale in termini di explainability.
-        La scelta è poi ricaduta su un \href{https://www.kaggle.com/datasets/ealtman2019/credit-card-transactions/data}{dataset} contenente dati simulati, rilasciato da IBM.
+        Inizialmente sono partito da un \href{https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud}{dataset reale} che, una volta addestrato non mi ha fornito i risultati sperati. Inoltre, tale dataset, vedeva nascosto il significato della maggior parte delle features, per ovvi motivi di privacy, rendendo il livello di explainability del modello molto basso. Da qui la scelta di ricorrere a dati simulati.
+        La scelta è dunque ricaduta su un \href{https://www.kaggle.com/datasets/ealtman2019/credit-card-transactions/data}{dataset simulato} rilasciato da IBM.
 
     \subsection{Data Description}
         Il dataset in questione comprende dati, ottenuti attraverso un processo di simulazione che non è stato reso noto, di oltre 24 milioni di transazioni, di cui 30.000 fraudolente (cioè lo 0.1\%). Essendo dati simulati, ci si aspetta siano fedeli rappresentazioni delle transazioni reali e delle loro caratteristiche.\\
@@ -172,7 +172,7 @@
         Infine, analizzando la distribuzione dei valori della categoria dei venditori, risulta che ci siano alcune categorie più soggette a frodi rispetto ad altre, come mostrato nel seguente grafico.
        \begin{figure}[H]
             \centering
-            \includegraphics[width=.6\textwidth]{img/DistribuzioneMCC.png}
+            \includegraphics[width=.4\textwidth]{img/DistribuzioneMCC.png}
             \caption[short]{Distribuzione n. frodi per categoria di venditore}
         \end{figure}
 
@@ -233,18 +233,9 @@
             \item [-] \textit{Use Chip}
             \item [-] \textit{Errors}
         \end{itemize}
-        Dunque, vado a scartare le restanti features, ad eccezione di \textit{Year} e \textit{Hour}, che dall'analisi iniziale, effettuata nella fase di esplorazione dei dati, sembravano avere una qualche correlazione con le transazioni fraudolente.
+        Dunque, vado a scartare le restanti features, ad eccezione di \textit{Hour}, poiché, come precedentemente analizzato, sembrano esserci delle fasce orarie particolarmente interessate da attività fraudolente.
     \subsection{Data Balancing}
         Come analizzato nella fase di Data Understanding, il dataset risulta essere altamente \textit{unbalanced}. Addestrare un modello su un dataset del genere, comporterebbe un elevato rischio di overfitting. Per ridurlo, è necessario andare a bilanciare il dataset.
-        \subsubsection{Data Splitting}
-            Prima di procedere, divido il dataset in \textit{training set} e \textit{test set}. E' cruciale effettuare questa divisione prima di effettuare qualsiasi operazione di sampling per evitare di incappare in problemi di \textbf{data leakage}. Infatti, sarebbe un errore testare e valutare il modello su dei dati bilanciati poiché questi dovrebbero rispecchiare la realtà quanto più è possibile. Se così non fosse, infatti, il modello effettuerebbe predizioni accurate in fase di addestramento, ma non in fase di rilascio.\\
-            Dunque, innanzitutto separo le features dalla variabile target. Per fare questo, utilizzo il metodo \textit{iloc} della libreria pandas: in particolare, nella prima istruzione seleziono tutte le righe, tramite \textit{:}, delle prime sette colonne (da 0 a 6) e poi, tramite \textit{values}, converto in un array numpy; nella seconda istruzione, invece, seleziono tutte le righe della ottava colonna (di indice 7)  del dataframe.
-            \begin{verbatim}
-                # Separating features and target
-                X = df1.iloc[:,:7].values
-                y = df1.iloc[:,7].values
-            \end{verbatim}
-            Successivamente, divido il dataset assegnando il 20\% dei dati al test set, mentre il restante 80\% di essi costituiranno i dati di addestramento.
         \subsubsection{Sampling Techniqe Selection}
             Per bilanciare un dataset, posso utilizzare principalmente due tecniche (nelle varie declinaizoni):
             \begin{itemize}
@@ -269,16 +260,108 @@
             \end{figure}
             Prima dell'applicazione di SMOTE, all'interno dei dati di training si hanno:
             \begin{itemize}
-                \item N. transazioni fraudolente: 307
-                \item N. transazioni non fraudolente: 239693
+                \item N. transazioni fraudolente: 388
+                \item N. transazioni non fraudolente: 299612
             \end{itemize}
             Dopo l'applicazione di SMOTE, invece, si hanno:
             \begin{itemize}
-                \item N. transazioni fraudolente: 239693
-                \item N. transazioni non fraudolente: 239693
+                \item N. transazioni fraudolente: 299612
+                \item N. transazioni non fraudolente: 299612
             \end{itemize}
 
+\section{Data Modeling}
+    Prima di proceder con l'addestramento del modello, divido il dataset in \textit{training set} e \textit{test set}. E' cruciale effettuare questa divisione prima dell'addestramento del modello per evitare di incappare in problemi di \textbf{data leakage}. Infatti, sarebbe un errore testare e valutare il modello sugli stessi dati. Se così non fosse, infatti, il modello effettuerebbe predizioni accurate in fase di addestramento, ma non in fase di rilascio.\\
+    Dunque, innanzitutto separo le features dalla variabile target. Per fare questo, utilizzo il metodo \textit{iloc} della libreria pandas: in particolare, nella prima istruzione seleziono tutte le righe, tramite \textit{:}, delle prime sette colonne (da 0 a 6) e poi, tramite \textit{values}, converto in un array numpy; nella seconda istruzione, invece, seleziono tutte le righe della ottava colonna (di indice 7)  del dataframe.
+    \begin{verbatim}
+        # Separating features and target
+        X = df1.iloc[:,:7].values
+        y = df1.iloc[:,7].values
+    \end{verbatim}
+    Successivamente, divido il dataset assegnando il 30\% dei dati al test set, mentre il restante 70\% di essi costituiranno i dati di addestramento.
+    \subsubsection{Classificatori}
+        Avendo di fronte un problema di classificazione binaria, vari sono gli algoritmi utilizzabili per addestrare il modello. Per gli scopi di questo progetto, decido di utilizzare le conoscenze acquisite durante il corso di FIA, scegliendo l'algoritmo \textbf{Naive Bayes} e riprendendo l'algoritmo \textbf{Decision Tree}, applicato, però, nel contesto dell'\textit{Ensemble Learning}, cioè utilizzerò il classificatore \textbf{Random Forest}.
+        \subsubsection{Naive Bayes}
+            Naive Bayes è un algoritmo di classificazione che, date le caratteristiche di una nuova istanza da classificare, calcola le probabilità che queste facciano parte di una classe tramite l'appilicazione del \textit{teorema di Bayes}. L'algoritmo viene chiamato \textit{naive} poiché non considera le correlazioni che ci sono tra le varie caratteristiche, supponendo che ognuna di esse sia indipendente dall'altra. Di seguito riportato il teorema sopracitato:
+            \begin{center}
+            \[
+                P(A|B) = \frac{P(B|A) \cdot P(A)}{P(B)}
+            \]
+        \end{center}
+        Esistono tre varianti di Naive Bayes:
+        \begin{itemize}
+            \item \textbf{Gaussian Naive Bayes}: adatto quando i dati sono disposti secondo una distribuzione gaussiana.
+            \item \textbf{Bernoulli Naive Bayes}: adatto quando i dati sono disposti secondo una distribuzione di Bernoulli.
+            \item \textbf{Multinomial Naive Bayes}: adatto quando i dati sono disposti secondo una distribuzione multinomiale.
+        \end{itemize}
+        Per scegliere quale delle tre varianti, eventualmente, utilizzare, decido di addestrare tre modelli diversi e confrontare le loro prestazioni, utilizzando una matrice di confusione.
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=1\textwidth]{img/ConfrontoMatrici.png}
+            \caption[short]{Matrici di confusione - Varianti Naive Bayes}
+        \end{figure}
+        Dalle matrici di correlazione appena visualizzate, posso ricavare le seguenti metriche:
+        \begin{itemize}
+            \item \textbf{Accuracy}: indica il numero totale di predizioni corrette (considera sia i True positives che i True negatives).
+            \item \textbf{Precision}: indica il numero di predizioni corrette per la classe \textit{True} rispetto al totale delle predizioni effettuate dal modello.
+            \item \textbf{Recall}: indica il numero di predizioni corrette per la classe \textit{True} rispetto a tutte le istanze positive di quella classe. Indica, cioè quante istanze positive riesce ad individuare.
+        \end{itemize}
+        Sottolineo che, in presenza di dataset fortemente sbilanciati, l'accuracy non è una metrica particolarmente affidabile, in quanto assumerebbe un valore alto poiché predirebbe con facilità la maggior parte dei valori della classe di maggioranza. Tuttavia, in questo caso, avendo precedentemente bilanciato il dataset, posso utilizzarla senza troppi problemi. Anche se il \textbf{recall} è la metrica che intendo massimizzare in quanto voglio essere sicuro di rilevare il maggior numero di transazioni fraudolente, anche a costo di etichettare come fraudolenta qualche transazione che in realtà è lecita (che verrebbe successivamente autorizzata in seguito ad ulteriori verifiche da parte del carholder).\\
+        A questo punto, analizzo le metriche ottenute dai vari classificatori.
+        \begin{center}
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \textbf{Classificatore} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall}\\ \hline
+            Gaussian NB & 0.6290830403631347 & 0.8663698501285508 & 0.30685515663694213 \\ \hline
+            Bernoulli NB & 0.5584531173512527 & 0.537401091931064 & 0.8515141756154982 \\ \hline
+            Multinomial NB & 0.5584531173512527 & 0.537401091931064 & 0.8515141756154982 \\ \hline
+        \end{tabular}
+    \end{center}
+    Bernoulli Naive Bayes e Multinomial Naive Bayes, sono quelli che danno migliori risultati in termini di Recall, a discapito di Precision e Accuracy. Infatti, questi due algoritmi riescono ad identificare un numero elevato di transazioni fraudolente, ma allo stesso tempo classificano molte transazioni lecite come fraudolente (Falsi Positivi).
+    \subsubsection{Random Forest}
+        A questo punto addestro il classificatore \textbf{Random Forest}. Tale algoritmo, combina l'output di più strutture (Ensemble Learning) ad \textit{albero decisionale} per raggiungere un unico risultato. Ricordo che il \textbf{Decision Tree} è un classificatore che cerca il modo migliore (sulla base dell'information gain di una features, che a sua volta è basato su entropia) per suddividere i dati. Random Forest combina i risultati di più alberi decisionali fornendo, generalmente, risultati più accurati.\\
+        Di seguito riporto la Confusion Matrix del modello basato su Random Forest e le metriche da essa derivanti.
+        \begin{figure}[H]
+            \centering
+            \includegraphics[width=.55\textwidth]{img/RFMatrix.png}
+            \caption[short]{Matrici di confusione - Random Forest}
+        \end{figure}
+        Risultati:
+        \begin{itemize}
+            \item \textbf{Accuracy}: 0.9974689599928798
+            \item \textbf{Precision}: 0.9968390932079322
+            \item \textbf{Recall}: 0.9981121389465736
+        \end{itemize}
+        E' già evidente la qualità superiore di questo modello, che ha prodotto risultati molto soddisfacenti. Nella seguente tabella, riassumo tutti i risultati ottenuti.
+        \begin{center}
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \textbf{Classificatore} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall}\\ \hline
+            Gaussian NB & 0.6290830403631347 & 0.8663698501285508 & 0.30685515663694213 \\ \hline
+            Bernoulli NB & 0.5584531173512527 & 0.537401091931064 & 0.8515141756154982 \\ \hline
+            Multinomial NB & 0.5584531173512527 & 0.537401091931064 & 0.8515141756154982 \\ \hline
+            Random Forest & 0.9974689599928798 & 0.9968390932079322 & 0.9981121389465736 \\ \hline
+        \end{tabular}
+    \end{center}
+    Il classificatore che scelgo, dunque è il \textbf{Random Forest}.
+\section{Evalutation}
+    A questo punto, vado ad analizzare la curva ROC del modello scelto.\\
+    Una curva ROC (Receiver Operator Characteristic) misura l'accuratezza di un classificatore binario per tutto l'intervallo di valori. Tale curva viene creata tracciando il valore del \textit{True Positive Rate} (asse y) rispetto al \textit{False Positive Rate} (asse x). Il punto di coordinate (0, 1) rappresenta il punto ideale: più la curva gli si avvicina, migliore è la qualità delle sue predizioni. Dalla curva ROC, possiamo studiare l'\textit{Area Under the Curve} (AUC). Un classificatore per cui risulta $AUC=1$ è l'ideale poiché vuol dire che riesce a cogliere perfettamente la distinzione tra le classi dei Positivi e dei Negativi.
+    Il classificatore prima implementato, restituisce $AUC=1$, dunque è davvero soddisfacente.
+    \begin{figure}[H]
+            \centering
+            \includegraphics[width=.55\textwidth]{img/RF-ROC-AUC.png}
+            \caption[short]{ROC-AUC per il modello addestrato}
+    \end{figure}
+    Per completare le osservazioni effettuate in fase di Data Understanding, attraverso un'ulteriore analisi del modello, sono andato a ricavare le features che più risultano essere correlate a transazioni fraudolente e sono riportate nel seguente grafico:
+    \begin{figure}[H]
+            \centering
+            \includegraphics[width=.65\textwidth]{img/RilevanzaFeatures.png}
+            \caption[short]{Features maggiormente correlate a casi di frode}
+    \end{figure}
+    Come si osserva, la posizione del venditore è particolarmente rilevante, così come la sua categoria di business. Osserviamo, inoltre, che ci sono fasce orarie particolarmente interessate da attività fraudolente. \\
 
-
-
+\section{Conclusioni}
+    Questo progetto è stato realizzato come prova di esame per l'esame di Fondamenti di Intelligenza Artificiale. Grazie ad esso ho avuto la possibilità di approfondire tutte le fasi dello sviluppo di un sistema di Machine Learning (ho seguito il modello CRISP-DM), integrando le conoscenze acquisite durante il corso, con nuove conoscenze in seguito a varie ricerche.\\
+    \subsection{Sviluppi Futuri}
+        Il modello non nasce per essere utilizzato da utenti comuni, bensì dovrebbe essere integrato da un sistema più grande, dal quale passano le transazioni effettuate in tempo reale per decidere se bloccarla oppure no.\\
 \end{document}
