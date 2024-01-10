@@ -1,5 +1,5 @@
 # CCFDetector: Using ML Against Credit Card Frauds
-Progetto conclusivo relativo al corso di Fondamenti di Intelligenza Artificiale.
+Progetto conclusivo realizzato per il corso di Fondamenti di Intelligenza Artificiale.
 ### Obiettivo
 L'obiettivo del progetto è la realizzazione di un sistema di Machine Learning
 (più nello specifico di un classificatore) in grado di determinare se una 
