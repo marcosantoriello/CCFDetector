@@ -308,10 +308,10 @@
             \textbf{Classificatore} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall}\\ \hline
             Gaussian NB & 0.6290830403631347 & 0.8663698501285508 & 0.30685515663694213 \\ \hline
             Bernoulli NB & 0.5584531173512527 & 0.537401091931064 & 0.8515141756154982 \\ \hline
-            Multinomial NB & 0.5584531173512527 & 0.537401091931064 & 0.8515141756154982 \\ \hline
+            Multinomial NB & 0.7094922344354946 & 0.6758173823313408 & 0.8073049117702584 \\ \hline
         \end{tabular}
     \end{center}
-    Bernoulli Naive Bayes e Multinomial Naive Bayes, sono quelli che danno migliori risultati in termini di Recall, a discapito di Precision e Accuracy. Infatti, questi due algoritmi riescono ad identificare un numero elevato di transazioni fraudolente, ma allo stesso tempo classificano molte transazioni lecite come fraudolente (Falsi Positivi).
+    Bernoulli Naive Bayes e Multinomial Naive Bayes, sono quelli che danno migliori risultati in termini di Recall, a discapito di Precision e Accuracy. Infatti, questi due algoritmi riescono ad identificare un numero elevato di transazioni fraudolente, ma allo stesso tempo classificano molte transazioni lecite come fraudolente (Falsi Positivi). Ciononostante, la variante più performante risulta essere la Multinomial.
     \subsubsection{Random Forest}
         A questo punto addestro il classificatore \textbf{Random Forest}. Tale algoritmo, combina l'output di più strutture (Ensemble Learning) ad \textit{albero decisionale} per raggiungere un unico risultato. Ricordo che il \textbf{Decision Tree} è un classificatore che cerca il modo migliore (sulla base dell'information gain di una feature, che a sua volta si basa sul calcolo dell'entropia) per suddividere i dati. Random Forest combina i risultati di più alberi decisionali fornendo, generalmente, risultati più accurati di un singolo DT.\\
         Di seguito riporto la Confusion Matrix del modello basato su Random Forest e le metriche da essa calcolate.
@@ -333,7 +333,7 @@
             \textbf{Classificatore} & \textbf{Accuracy} & \textbf{Precision} & \textbf{Recall}\\ \hline
             Gaussian NB & 0.6290830403631347 & 0.8663698501285508 & 0.30685515663694213 \\ \hline
             Bernoulli NB & 0.5584531173512527 & 0.537401091931064 & 0.8515141756154982 \\ \hline
-            Multinomial NB & 0.5584531173512527 & 0.537401091931064 & 0.8515141756154982 \\ \hline
+            Multinomial NB & 0.7094922344354946 & 0.6758173823313408 & 0.8073049117702584 \\ \hline
             Random Forest & 0.9974689599928798 & 0.9968390932079322 & 0.9981121389465736 \\ \hline
         \end{tabular}
     \end{center}
